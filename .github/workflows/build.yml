@@ -25,17 +25,21 @@ jobs:
       run: |
         pip install --upgrade pip buildozer cython==0.29.37 pexpect
 
-    - name: Prepare Android SDK Command-line Tools
+    - name: Install Android SDK Command-line Tools Manually
       run: |
         ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools
+        
+        # Descargar Command-line tools oficiales de Android
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
+        
+        # Mover a la estructura esperada por buildozer
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
         mv /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         rm -rf /tmp/cmdtools.zip /tmp/cmdtools_extracted
-        
-        # Pre-aceptar licencias para evitar bloqueos
+
+        # Pre-aceptar licencias
         mkdir -p $ANDROID_HOME/licenses
         echo -e "\n24333f8a43b681621c17eeb6fb0cb377a063efc5" > $ANDROID_HOME/licenses/android-sdk-license
         echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" >> $ANDROID_HOME/licenses/android-sdk-license
