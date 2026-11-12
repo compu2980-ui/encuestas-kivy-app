@@ -25,9 +25,19 @@ jobs:
       run: |
         pip install --upgrade pip buildozer cython==0.29.37 pexpect
 
+    - name: Accept Android SDK Licenses
+      run: |
+        mkdir -p ~/.android
+        touch ~/.android/repositories.cfg
+        # Esto pre-acepta las licencias del SDK para evitar bloqueos
+        ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+        mkdir -p $ANDROID_HOME/licenses
+        echo -e "\n24333f8a43b681621c17eeb6fb0cb377a063efc5" > $ANDROID_HOME/licenses/android-sdk-license
+        echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" >> $ANDROID_HOME/licenses/android-sdk-license
+
     - name: Build APK with Buildozer
       run: |
-        yes | buildozer -v android debug
+        buildozer -v android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
