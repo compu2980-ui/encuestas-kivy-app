@@ -60,8 +60,12 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        # Aislar completamente el entorno limpiando variables de host (evita el error __GNUC_PREREQ)
-        unset CFLAGS LDFLAGS CPPFLAGS CC CXX
+        # Aislar el entorno eliminando variables y rutas del host Linux
+        unset CFLAGS LDFLAGS CPPFLAGS CC CXX PKG_CONFIG_PATH
+        
+        # Forzar a charset-normalizer a modo Python puro (evita errores de cabeceras C)
+        export CHARSET_NORMALIZER_BUILD_EXTENSION=0
+        
         export PATH=$PATH:$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
         buildozer -v android debug
 
