@@ -51,10 +51,8 @@ jobs:
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager $ANDROID_HOME/tools/bin/avdmanager
 
-        # Pre-aceptar licencias del SDK
-        mkdir -p $ANDROID_HOME/licenses
-        echo -e "\n24333f8a43b681621c17eeb6fb0cb377a063efc5" > $ANDROID_HOME/licenses/android-sdk-license
-        echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" >> $ANDROID_HOME/licenses/android-sdk-license
+        # Aceptar AUTOMÁTICAMENTE todas las licencias del SDK (incluyendo Build-Tools)
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
     - name: Build APK with Buildozer
       run: |
