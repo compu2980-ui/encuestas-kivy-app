@@ -26,7 +26,7 @@ jobs:
     - name: Install System Dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip build-essential ccache cmake \
+        sudo apt install -y git zip unzip build-essential cmake \
           autoconf automake libtool libtool-bin libltdl-dev pkg-config \
           libffi-dev libssl-dev zlib1g-dev libncurses-dev \
           libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
@@ -40,34 +40,30 @@ jobs:
         ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
 
-        # Descargar e instalar las command-line tools
+        # Descargar herramientas de línea de comandos
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
         mv /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         rm -rf /tmp/cmdtools.zip /tmp/cmdtools_extracted
 
-        # Crear enlaces para Buildozer
+        # Enlaces para Buildozer
         mkdir -p $ANDROID_HOME/tools/bin
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager $ANDROID_HOME/tools/bin/avdmanager
 
-        # Aceptar licencias del SDK automáticamente
+        # Aceptar licencias
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
     - name: Clean Stale Build Artifacts
       run: |
-        # Limpiar compilaciones previas corruptas de python-for-android
         rm -rf .buildozer/android/platform/build-*
 
     - name: Build APK with Buildozer
       run: |
+        # Limpiar flags del sistema operativo host para forzar el uso exclusivo del NDK
+        unset CFLAGS LDFLAGS CC CXX
         buildozer -v android debug
 
-    - name: Upload APK Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: votafacil-apk
-        path: bin/*.apk
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
