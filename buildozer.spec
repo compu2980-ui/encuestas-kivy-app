@@ -9,6 +9,12 @@ package.name = votafacil
 # (str) Package domain (needed for android packaging)
 package.domain = org.votafacil
 
+# (str) Source directory where the app lives
+source.dir = .
+
+# (str) Application version (requirements check fix)
+version = 0.1
+
 # (list) Source files to include (let it match your project)
 source.include_exts = py,png,jpg,kv,atlas
 
@@ -19,14 +25,10 @@ source.exclude_exts = spec
 source.exclude_dirs = tests, bin, venv
 
 # (list) Application requirements
-# Note: charset-normalizer is included here safely
 requirements = python3,kivy,requests,urllib3,idna,certifi,charset-normalizer,supabase
 
 # (str) Supported orientations
 orientation = portrait
-
-# (list) List of services to declare
-#services = NAME:ENTRYPOINT_TO_PYTHON_SCRIPT,NAME2:ENTRYPOINT_TO_PYTHON_SCRIPT
 
 #
 # Android specific
@@ -38,10 +40,10 @@ android.api = 33
 # (int) Minimum API your APK will support.
 android.minapi = 21
 
-# (str) Android NDK version to use (Requerido por p4a moderno)
+# (str) Android NDK version to use
 android.ndk = 25b
 
-# (str) python-for-android branch to use (Corrige incompatibilidades de compilación)
+# (str) python-for-android branch to use
 p4a.branch = master
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
@@ -50,32 +52,8 @@ android.private_storage = True
 # (list) Permissions
 android.permissions = INTERNET
 
-# (list) pyjnius gnu classpath extra classes
-#android.add_jars = foo.jar,bar.jar,path/to/dependency/
-
-# (list) python-for-android git clone to use (optional)
-#p4a.fork = 
-
 # (str) Bootstrap to use for android build
 p4a.bootstrap = sdl2
-
-# (str) XML misc to add to AndroidManifest.xml
-#android.manifest_application_props = 
-
-# (str) Extra XML to add to AndroidManifest.xml manifest section
-#android.manifest_manifest_props = 
-
-# (str) Presplash background color
-#android.presplash_color = #FFFFFF
-
-# (list) The orientation for the app
-#android.orientation = portrait
-
-# (bool) Indicate whether the application is a game or not
-#android.game = False
-
-# (str) Gradle dependencies to add
-#android.gradle_dependencies = 
 
 # (bool) Enable AndroidX support
 android.androidx = True
