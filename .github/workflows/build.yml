@@ -40,18 +40,18 @@ jobs:
         ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
 
-        # Descargar herramientas de línea de comandos
+        # Descargar herramientas de línea de comandos de Android
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
         mv /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         rm -rf /tmp/cmdtools.zip /tmp/cmdtools_extracted
 
-        # Enlaces para Buildozer
+        # Crear enlaces necesarios para Buildozer
         mkdir -p $ANDROID_HOME/tools/bin
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager $ANDROID_HOME/tools/bin/avdmanager
 
-        # Aceptar licencias
+        # Aceptar licencias automáticamente
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
     - name: Clean Stale Build Artifacts
@@ -60,8 +60,9 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        # Limpiar flags del sistema operativo host para forzar el uso exclusivo del NDK
-        unset CFLAGS LDFLAGS CC CXX
+        # Aislar completamente el entorno limpiando variables de host (evita el error __GNUC_PREREQ)
+        unset CFLAGS LDFLAGS CPPFLAGS CC CXX
+        export PATH=$PATH:$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
         buildozer -v android debug
 
     - name: Upload APK Artifact
