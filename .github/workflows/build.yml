@@ -40,24 +40,34 @@ jobs:
         ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
 
-        # Descargar e instalar las command-line tools en la ruta moderna
+        # Descargar e instalar las command-line tools
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
         mv /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         rm -rf /tmp/cmdtools.zip /tmp/cmdtools_extracted
 
-        # Crear la ruta antigua (tools/bin) y enlazarla para que Buildozer la encuentre
+        # Crear enlaces para Buildozer
         mkdir -p $ANDROID_HOME/tools/bin
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager $ANDROID_HOME/tools/bin/avdmanager
 
-        # Aceptar AUTOMÁTICAMENTE todas las licencias del SDK (incluyendo Build-Tools)
+        # Aceptar licencias del SDK automáticamente
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
+    - name: Clean Stale Build Artifacts
+      run: |
+        # Limpiar compilaciones previas corruptas de python-for-android
+        rm -rf .buildozer/android/platform/build-*
 
     - name: Build APK with Buildozer
       run: |
         buildozer -v android debug
 
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: votafacil-apk
+        path: bin/*.apk
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
