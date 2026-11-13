@@ -3,6 +3,7 @@ name: Build Kivy APK
 on:
   push:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,10 +17,19 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Set up Java 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+
     - name: Install System Dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+        sudo apt install -y git zip unzip build-essential ccache cmake \
+          autoconf automake libtool libtool-bin libltdl-dev pkg-config \
+          libffi-dev libssl-dev zlib1g-dev libncurses-dev \
+          libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
     - name: Install Buildozer and Cython
       run: |
@@ -29,14 +39,14 @@ jobs:
       run: |
         ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
         mkdir -p $ANDROID_HOME/cmdline-tools/latest
-        
+
         # Descargar e instalar las command-line tools en la ruta moderna
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdtools.zip
         unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
         mv /tmp/cmdtools_extracted/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
         rm -rf /tmp/cmdtools.zip /tmp/cmdtools_extracted
 
-        # Crear la ruta antigua (tools/bin) y enlazarla para que Buildozer la encuentre sin errores
+        # Crear la ruta antigua (tools/bin) y enlazarla para que Buildozer la encuentre
         mkdir -p $ANDROID_HOME/tools/bin
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
         ln -s $ANDROID_HOME/cmdline-tools/latest/bin/avdmanager $ANDROID_HOME/tools/bin/avdmanager
@@ -53,5 +63,5 @@ jobs:
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: package-apk
+        name: votafacil-apk
         path: bin/*.apk
