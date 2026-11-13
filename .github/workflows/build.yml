@@ -31,9 +31,12 @@ jobs:
           libffi-dev libssl-dev zlib1g-dev libncurses-dev \
           libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
-    - name: Install Buildozer and Cython
+    - name: Install Buildozer, Cython, and p4a from Source
       run: |
-        pip install --upgrade pip buildozer cython==0.29.37 pexpect
+        pip install --upgrade pip
+        pip install --upgrade cython==0.29.37 pexpect
+        pip install --upgrade git+https://github.com/kivy/buildozer.git
+        pip install --upgrade git+https://github.com/kivy/python-for-android.git
 
     - name: Prepare Android SDK and Symlinks for Buildozer
       run: |
@@ -62,10 +65,6 @@ jobs:
       run: |
         # Aislar el entorno eliminando variables y rutas del host Linux
         unset CFLAGS LDFLAGS CPPFLAGS CC CXX PKG_CONFIG_PATH
-        
-        # Forzar a charset-normalizer a modo Python puro (evita errores de cabeceras C)
-        export CHARSET_NORMALIZER_BUILD_EXTENSION=0
-        
         export PATH=$PATH:$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
         buildozer -v android debug
 
