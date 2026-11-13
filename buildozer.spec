@@ -9,6 +9,9 @@ package.name = votafacil
 # (str) Package domain (needed for android packaging)
 package.domain = org.compu2980
 
+# (str) Where source files are stored
+source.dir = .
+
 # (str) Source files to include (let it default or specify extensions)
 source.include_exts = py,png,jpg,kv,atlas
 
@@ -16,14 +19,13 @@ source.include_exts = py,png,jpg,kv,atlas
 source.include_patterns = assets/*,*.py
 
 # (list) Application requirements
-# Incluye Kivy, Python y todas las librerías necesarias para conectar con Supabase
 requirements = python3,kivy,requests,urllib3,idna,certifi,charset-normalizer,supabase
+
+# (str) Version of your application
+version = 0.1
 
 # (str) Supported orientations (portrait, landscape or all)
 orientation = portrait
-
-# (list) List of service to declare
-#services = 
 
 #
 # Android specific
