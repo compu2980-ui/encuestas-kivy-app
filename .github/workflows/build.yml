@@ -63,9 +63,13 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        # Aislar el entorno eliminando variables y rutas del host Linux
-        unset CFLAGS LDFLAGS CPPFLAGS CC CXX PKG_CONFIG_PATH
+        # Forzar a charset-normalizer a usar modo Python puro (evita que intente compilar extensiones C)
+        export CHARSET_NORMALIZER_BUILD_EXTENSION=0
+        
+        # Asegurar que el SDK esté en el PATH
         export PATH=$PATH:$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
+        
+        # Ejecutar buildozer dejando que p4a administre el entorno del NDK de forma limpia
         buildozer -v android debug
 
     - name: Upload APK Artifact
