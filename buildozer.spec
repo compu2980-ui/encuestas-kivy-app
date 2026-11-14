@@ -25,7 +25,7 @@ source.exclude_exts = spec
 source.exclude_dirs = tests, bin, venv
 
 # (list) Application requirements
-requirements = python3,kivy,requests,urllib3,idna,certifi,charset-normalizer,supabase
+requirements = python3,kivy,requests,urllib3,idna,certifi,charset-normalizer
 
 # (str) Supported orientations
 orientation = portrait
